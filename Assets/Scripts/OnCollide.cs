@@ -2,37 +2,79 @@
 using System.Collections;
 
 public class OnCollide : MonoBehaviour {
-	public GameObject box;
-	public GameObject orc;
+	public GameObject Box;
+	private Rigidbody2D rb;
+	public float topEnd;
+	public float botEnd;
+	public float leftEnd;
+	public float rightEnd;
+	public Vector2 newPos;
+	public Vector2 oldPos;
+	private float BoxSize;
+	private Vector2 pos;
 	// Use this for initialization
 	void Start () {
-	
+		BoxSize=1.01f;
+		rb = Box.GetComponent<Rigidbody2D> ();
+		oldPos = Box.transform.position;
+		Debug.Log("Trigger: " + Box.GetComponent<BoxCollider2D>().isTrigger);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (box.transform.position==orc.transform.position) {
-			print ("orc");
-			float BoxSize = 1.14f;
-			float x = box.transform.localPosition.x;
-			float y = box.transform.localPosition.y;
-			float z = box.transform.localPosition.z;
-			Vector3 newPos = new Vector3(x,y,z);
-			if (Input.GetKeyUp ("w")) {
-				newPos = new Vector3(x,y+BoxSize,z);
+	void FixedUpdate()
+	{
+		pos = Box.transform.position;
+		if (rb.velocity != Vector2.zero) {
+			if (pos.x < (newPos + oldPos + new Vector2 (0.001f, 0.001f)).x && pos.x > (newPos + oldPos - new Vector2 (0.001f, 0.001f)).x &&
+				pos.y < (newPos + oldPos + new Vector2 (0.001f, 0.001f)).y && pos.y > (newPos + oldPos - new Vector2 (0.001f, 0.001f)).y) {
+				oldPos = pos;
+				rb.velocity = Vector2.zero;
+				rb.angularVelocity = 0;
+				
 			}
-			if (Input.GetKeyUp ("s")){
-				newPos = new Vector3(x,y-BoxSize,z);
-			}
-			
-			if (Input.GetKeyUp ("a")){
-				newPos = new Vector3(x-BoxSize,y,z);
-			}
-			if (Input.GetKeyUp ("d")){
-				newPos = new Vector3(x+BoxSize,y,z);;
 		}
-			if(newPos.x<5&&newPos.x>-5&&newPos.y>-5&&newPos.y<5)
-				box.transform.position = newPos;
 	}
-}
+	void OnTriggerEnter2D(Collider2D col) {
+
+		pos = Box.transform.position;
+		var relativePosition = new Vector2 (col.transform.position.x - Box.transform.position.x, col.transform.position.y - Box.transform.position.y);
+		if (relativePosition.x > 0.2f) {
+			
+			//print ("The object is to the right");
+			newPos = new Vector2 (-BoxSize, 0);
+			MoveBox (newPos, pos);
+			
+		} else if(relativePosition.x < -0.2f) {
+			
+			//print ("The object is to the left");
+			newPos = new Vector2 (BoxSize, 0);
+			MoveBox (newPos, pos);
+			
+		}
+		
+		if (relativePosition.y > 0.2f) {
+			
+			//print ("The object is above.");
+			newPos = new Vector2 (0, -BoxSize);
+			MoveBox (newPos, pos);
+			
+		} else if(relativePosition.y < -0.2f) {
+			
+			//print ("The object is below.");
+			newPos = new Vector2 (0, BoxSize);
+			
+			MoveBox (newPos, pos);
+			
+		}
+
+	}
+
+	void MoveBox(Vector3 addPos, Vector3 pos)
+	{
+		if (
+			(addPos + pos).x < rightEnd && (addPos + pos).x > leftEnd && (addPos + pos).y > botEnd && (addPos + pos).y < topEnd 
+			) {
+			//Box.transform.position +=newPos;
+			rb.MovePosition(pos + addPos*Time.fixedDeltaTime);
+		}
+	}
+	
 }

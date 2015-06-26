@@ -15,19 +15,34 @@ public class Move : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		BoxSize=1.01f;
-	rb = Orc.GetComponent<Rigidbody2D> ();
+		rb = Orc.GetComponent<Rigidbody2D> ();
 		oldPos = Orc.transform.position;
+	}
+	void OnTriggerEnter2D(Collider2D col)
+	{
+		Debug.Log ("OutCircle");
+		if (col.GetType() == typeof(CircleCollider2D)) 
+		{
+			rb.velocity = new Vector2(-0.0001f,-0.0001f);
+			rb.angularVelocity = 0;
+			print("circle");
+			Orc.transform.position=oldPos;
+		//	newPos=Vector2.zero;
+
+		}
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
 		Vector2 pos = Orc.transform.position;
 		if (rb.velocity != Vector2.zero) {
-			if (pos.x < (newPos + oldPos + new Vector2(0.001f,0.001f)).x && pos.x > (newPos + oldPos - new Vector2(0.001f,0.001f)).x &&
-			    pos.y < (newPos + oldPos + new Vector2(0.001f,0.001f)).y && pos.y > (newPos + oldPos - new Vector2(0.001f,0.001f)).y) {
+
+			if (pos.x < (newPos + oldPos + new Vector2(0.01f,0.01f)).x && pos.x > (newPos + oldPos - new Vector2(0.01f,0.01f)).x &&
+			    pos.y < (newPos + oldPos + new Vector2(0.01f,0.01f)).y && pos.y > (newPos + oldPos - new Vector2(0.01f,0.01f)).y) {
 				oldPos = pos;
 				rb.velocity = Vector2.zero;
 				rb.angularVelocity = 0;
+				print ("stahp!");
 
 			}
 		} 
@@ -60,12 +75,15 @@ public class Move : MonoBehaviour {
 		}
 	void MoveOrc(Vector3 addPos, Vector3 pos)
 	{
-		if (
-			(addPos + pos).x < rightEnd && (addPos + pos).x > leftEnd && (addPos + pos).y > botEnd && (addPos + pos).y < topEnd 
-			) {
+		print ("Thinking");
+		bool notTheEndOfBack = (addPos + pos).x < rightEnd && (addPos + pos).x > leftEnd && (addPos + pos).y > botEnd && (addPos + pos).y < topEnd;
+		if (notTheEndOfBack) 
+		{
+			print("go!");
 			//Orc.transform.position +=newPos;
 			rb.MovePosition(pos + addPos*Time.fixedDeltaTime);
 		}
 	}
+
 
 }
