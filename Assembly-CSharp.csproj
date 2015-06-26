@@ -48,6 +48,8 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Move.cs" />
      <Compile Include="Assets\Scripts\OnCollide.cs" />
+     <Compile Include="Assets\Scripts\OnVictory.cs" />
+     <Compile Include="Assets\Scripts\Reset.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

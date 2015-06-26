@@ -81,7 +81,7 @@ public class Move : MonoBehaviour {
 		{
 			print("go!");
 			//Orc.transform.position +=newPos;
-			rb.MovePosition(pos + addPos*Time.fixedDeltaTime);
+			rb.MovePosition(pos + addPos*Time.fixedDeltaTime*2);
 		}
 	}
 

@@ -73,7 +73,7 @@ public class OnCollide : MonoBehaviour {
 			(addPos + pos).x < rightEnd && (addPos + pos).x > leftEnd && (addPos + pos).y > botEnd && (addPos + pos).y < topEnd 
 			) {
 			//Box.transform.position +=newPos;
-			rb.MovePosition(pos + addPos*Time.fixedDeltaTime);
+			rb.MovePosition(pos + addPos*Time.fixedDeltaTime*2);
 		}
 	}
 	
